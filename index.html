@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- YOUR FAVICON/LOGO LINK IS HERE -->
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- OPTIMIZED TITLE TAG -->
+    <title>Ad Revenue Calculator: AdSense, Adsterra & More - Free Tool</title>
+    
+    <!-- NEW: META DESCRIPTION TAG -->
+    <meta name="description" content="Estimate your website's ad earnings instantly. Calculate potential revenue for Google AdSense, Adsterra, and custom models (CPC, CPM, CTR). Maximize your monetization.">
+    
+    <!-- OPTIONAL: META KEYWORDS TAG -->
+    <meta name="keywords" content="ad revenue calculator, adsense calculator, adsterra calculator, cpm calculator, cpc calculator, ad earnings, website monetization, seo calculator, free tool, online calculator">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --background-color: #f4f7f9;
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --light-text-color: #6c757d;
+            --border-color: #e0e0e0;
+            --results-bg: #edf5ff;
+            --disabled-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 10px 0;
+        }
+        
+        header p {
+            text-align: center;
+            color: var(--light-text-color);
+            margin-bottom: 40px;
+        }
+
+        .calculator-form .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        @media (min-width: 600px) {
+            .calculator-form .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { margin-bottom: 10px; font-weight: 600; font-size: 0.9em; }
+
+        .form-group input, .form-group select {
+            width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em;
+            font-family: 'Poppins', sans-serif; box-sizing: border-box; transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        .form-group input:disabled, .form-group select:disabled {
+            background-color: var(--disabled-bg); cursor: not-allowed;
+        }
+
+        #results {
+            margin-top: 40px; background-color: var(--results-bg); padding: 30px; border-radius: 8px; text-align: center;
+        }
+
+        #results h3 { margin: 0 0 20px 0; color: var(--primary-color); font-weight: 600; }
+        .revenue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+        .revenue-item span { display: block; }
+        .revenue-label { font-size: 0.9em; color: var(--light-text-color); margin-bottom: 5px; }
+        .revenue-value { font-size: 1.5em; font-weight: 700; color: var(--primary-color); }
+        .disclaimer { font-size: 0.8em; color: var(--light-text-color); margin-top: 20px; text-align: center; font-style: italic; }
+
+        .info-section {
+            margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-color); line-height: 1.7;
+        }
+        .info-section h2 { text-align: center; color: var(--text-color); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>The Real Ad Revenue Calculator</h1>
+            <p>Select your ad network to see an estimate, or choose "Custom" to enter your own values.</p>
+        </header>
+
+        <form class="calculator-form" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+                <!-- AD NETWORK SELECTOR -->
+                <div class="form-group full-width">
+                    <label for="adNetwork">Select Ad Network or Platform</label>
+                    <select id="adNetwork">
+                        <option value="custom">Custom (Enter my own values)</option>
+                        <option value="adsense" data-model="cpc" data-cpc="0.45" data-ctr="2.5">Google AdSense (Estimate)</option>
+                        <option value="adsterra" data-model="cpm" data-cpm="1.50">Adsterra (Estimate)</option>
+                    </select>
+                </div>
+                
+                <!-- INPUT FIELDS -->
+                <div class="form-group full-width">
+                    <label for="pageviews">Daily Pageviews / Impressions</label>
+                    <input type="number" id="pageviews" placeholder="e.g., 50000" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="model">Revenue Model</label>
+                    <select id="model">
+                        <option value="cpc">CPC (Cost Per Click)</option>
+                        <option value="cpm">CPM (Cost Per Mille)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="ctr-group">
+                    <label for="ctr">Click-Through Rate (CTR) (%)</label>
+                    <input type="number" step="0.01" id="ctr" placeholder="e.g., 2.5" min="0">
+                </div>
+                
+                <div class="form-group" id="rate-group">
+                    <label id="rateLabel" for="rate">Rate ($)</label>
+                    <input type="number" step="0.01" id="rate" placeholder="e.g., 0.50" min="0">
+                </div>
+            </div>
+        </form>
+
+        <div id="results">
+            <h3>Estimated Earnings</h3>
+            <div class="revenue-grid">
+                <div class="revenue-item"><span class="revenue-label">Daily</span><span class="revenue-value" id="dailyRevenue">$0.00</span></div>
+                <div class="revenue-item"><span class="revenue-label">Monthly</span><span class="revenue-value" id="monthlyRevenue">$0.00</span></div>
+                <div class="revenue-item"><span class="revenue-label">Yearly</span><span class="revenue-value" id="yearlyRevenue">$0.00</span></div>
+            </div>
+            <p class="disclaimer">Note: Network presets are industry averages. Actual earnings will vary based on your traffic quality, niche, and location.</p>
+        </div>
+    </div>
+    
+    <div class="container info-section">
+        <h2>How to Improve These Numbers</h2>
+        <ul>
+            <li><strong>Improve Pageviews:</strong> Focus on high-quality content, SEO keyword research, and promoting on social media. More targeted visitors = more revenue.</li>
+            <li><strong>Improve CTR:</strong> Experiment with ad placement, colors, and sizes. Ensure ads are relevant to your content and integrate them naturally.</li>
+            <li><strong>Improve CPC/CPM Rate:</strong> Attract visitors from high-value countries (US, UK, Canada). Write about profitable niches (finance, health, tech). A good site reputation builds trust with networks.</li>
+        </ul>
+    </div>
+
+    <script>
+        // Select all elements
+        const pageviewsInput = document.getElementById('pageviews');
+        const ctrInput = document.getElementById('ctr');
+        const rateInput = document.getElementById('rate');
+        const modelSelect = document.getElementById('model');
+        const adNetworkSelect = document.getElementById('adNetwork');
+        
+        const rateLabel = document.getElementById('rateLabel');
+        const ctrGroup = document.getElementById('ctr-group');
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+
+        function calculateRevenue() {
+            const pageviews = parseFloat(pageviewsInput.value) || 0;
+            const ctr = parseFloat(ctrInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            const model = modelSelect.value;
+            let dailyRevenue = 0;
+
+            if (model === 'cpc') {
+                const totalClicks = pageviews * (ctr / 100);
+                dailyRevenue = totalClicks * rate;
+            } else { // CPM model
+                dailyRevenue = (pageviews / 1000) * rate;
+            }
+            document.getElementById('dailyRevenue').textContent = formatCurrency(dailyRevenue);
+            document.getElementById('monthlyRevenue').textContent = formatCurrency(dailyRevenue * 30);
+            document.getElementById('yearlyRevenue').textContent = formatCurrency(dailyRevenue * 365);
+        }
+
+        function handleNetworkChange() {
+            const selectedOption = adNetworkSelect.options[adNetworkSelect.selectedIndex];
+            const network = selectedOption.value;
+
+            if (network === 'custom') {
+                // Enable all fields for custom input
+                [modelSelect, ctrInput, rateInput].forEach(el => el.disabled = false);
+            } else {
+                // Disable fields and use presets
+                [modelSelect, ctrInput, rateInput].forEach(el => el.disabled = true);
+                
+                const model = selectedOption.dataset.model;
+                modelSelect.value = model;
+
+                if (model === 'cpc') {
+                    rateInput.value = selectedOption.dataset.cpc || 0;
+                    ctrInput.value = selectedOption.dataset.ctr || ''; // Keep CTR value if preset
+                } else { // CPM
+                    rateInput.value = selectedOption.dataset.cpm || 0;
+                    ctrInput.value = ''; // Clear CTR for CPM
+                }
+            }
+            updateUIAndCalculate();
+        }
+
+        function updateUIAndCalculate() {
+            const model = modelSelect.value;
+            if (model === 'cpm') {
+                rateLabel.textContent = 'Cost Per Mille (CPM) ($)';
+                ctrGroup.style.display = 'none'; // Hide CTR field for CPM
+            } else {
+                rateLabel.textContent = 'Cost Per Click (CPC) ($)';
+                ctrGroup.style.display = 'block'; // Show CTR field for CPC
+            }
+            calculateRevenue();
+        }
+
+        // --- Event Listeners ---
+        pageviewsInput.addEventListener('input', calculateRevenue);
+        ctrInput.addEventListener('input', calculateRevenue);
+        rateInput.addEventListener('input', calculateRevenue);
+        modelSelect.addEventListener('change', updateUIAndCalculate);
+        adNetworkSelect.addEventListener('change', handleNetworkChange);
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', handleNetworkChange);
+    </script>
+
+</body>
+</html>
